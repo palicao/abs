@@ -328,7 +328,11 @@ func (p *Parser) parseReturnStatement() *ast.ReturnStatement {
 
 	p.nextToken()
 
-	stmt.ReturnValue = p.parseExpression(LOWEST)
+	if p.curTokenIs(token.SEMICOLON) {
+		stmt.ReturnValue = &ast.NullLiteral{Token: p.curToken}
+	} else {
+		stmt.ReturnValue = p.parseExpression(LOWEST)
+	}
 
 	if p.peekTokenIs(token.SEMICOLON) {
 		p.nextToken()
